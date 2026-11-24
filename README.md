@@ -1,90 +1,75 @@
-<div align="center">
-  <img src="https://github.com/deanishe/alfred-firefox/blob/master/icon.png" alt="Alfred-Firefox icon" title="Alfred-Firefox icon"/>
-</div>
+# Firefox Assistant for Alfred
 
-Firefox Assistant for Alfred
-============================
+Search and manage Firefox bookmarks, history, downloads and tabs directly from Alfred.
 
-Search and manipulate Firefox's bookmarks, history and tabs from Alfred.
+![Alfred-Firefox icon](https://github.com/mtissington/alfred-firefox/blob/master/icon.png)
 
-![Animated demo of workflow in use][demo]
+![Animated demo of workflow in use](https://github.com/mtissington/alfred-firefox/blob/master/demo.gif)
 
-The workflow can be easily [extended with your own actions][scripts].
+This repository is a maintained version of the original [Firefox Assistant for Alfred](https://github.com/deanishe/alfred-firefox), with updated build and release workflows.
 
-Installation
-------------
+The workflow can also be [extended with your own actions](doc/scripts.md).
 
-The workflow supports Alfred 4+ and the extension works with (at least) Firefox, Firefox Nightly and Firefox Developer Edition.
+## Installation
 
-1. Download and install the [latest version of the workflow][workflow].
-2. Run `ffass` in Alfred and choose `Install Firefox Extension` to get [the Firefox extension][addon].
+The workflow supports Alfred 4 and later. The Firefox extension works with Firefox, Firefox Nightly and Firefox Developer Edition.
 
-See [the setup documentation][setup] for more details.
+1. Download and install the [latest release](https://github.com/mtissington/alfred-firefox/releases/latest).
+2. Run `ffass` in Alfred and choose **Install Firefox Extension** to install the [Firefox extension](https://addons.mozilla.org/en-US/firefox/addon/alfred-launcher-integration/).
+3. See the [setup documentation](doc/setup.md) for more details.
 
+## Usage
 
-Building from source
---------------------
-
-You only need [Go][go] (the version in `go.mod`). Builds are driven by [Mage][mage], which Go fetches on first use, so there is nothing else to install and Alfred does not need to be present.
-
-```sh
-go run github.com/magefile/mage -l        # list all targets
-go run github.com/magefile/mage test      # go vet + go test
-go run github.com/magefile/mage dist      # universal (Apple Silicon + Intel) .alfredworkflow in ./dist
-go run github.com/magefile/mage build     # build for this machine only (faster)
-go run github.com/magefile/mage extension # Firefox extension (.xpi) in ./dist
-go run github.com/magefile/mage link      # symlink the build into Alfred (development)
-```
-
-Double-click the `.alfredworkflow` in `dist/` to install it. `link` needs Alfred to be detectable; if it isn't, set `alfred_preferences` to the path of your `Alfred.alfredpreferences`. If you have Mage installed, you can run `mage dist` etc. directly.
-
-
-Usage
------
-
-The basic usage is:
+The main Alfred keywords are:
 
 - `bm <query>` — Search bookmarks
 - `bml <query>` — Search bookmarklets
-- `hist <query>` — Search history
+- `hist <query>` — Search browsing history
 - `dl [<query>]` — Search downloads
-- `tab [<query>]` — Search tabs
+- `tab [<query>]` — Search open tabs
 - `ffass [<query>]` — Workflow status and links
 
-See [the usage documentation][usage] for full details.
+See the [usage documentation](doc/usage.md) for full details.
 
+## Integration
 
-Integration
------------
+Other Alfred workflows can use this workflow to retrieve the title and URL of the active Firefox tab, without relying on AppleScript.
 
-The workflow can be used by other workflows to retrieve the title and URL of the active Firefox tab (in lieu of AppleScript, which Firefox doesn't support). See [the integration docs][integration] for details.
+See the [integration documentation](doc/integration.md) for details.
 
+## Building from source
 
-Documentation
--------------
+You need [Go](https://go.dev/) (using the version specified in `go.mod`). Builds are driven by [Mage](https://magefile.org/), which Go downloads on first use.
 
-See [the full documentation][docs] for detailed info on setting up, using and customising the workflow.
+```sh
+go run github.com/magefile/mage -l        # List available targets
+go run github.com/magefile/mage test      # Run go vet and go test
+go run github.com/magefile/mage dist      # Build universal Alfred workflow
+go run github.com/magefile/mage build     # Build for this machine only
+go run github.com/magefile/mage extension # Build Firefox extension (.xpi)
+go run github.com/magefile/mage link      # Link build into Alfred for development
+```
 
+The build produces:
 
-Licensing & thanks
-------------------
+- `.alfredworkflow` — the Alfred workflow installer
+- `.xpi` — the Firefox extension package
 
-This workflow and extension are released under the [MIT licence][licence].
+Double-click the `.alfredworkflow` file in `dist/` to install it. The `link` target requires Alfred to be detectable; if it isn't, set `alfred_preferences` to the path of your `Alfred.alfredpreferences`.
 
-It is written in [Go][go] and heavily based on the [AwGo library][awgo]. The icons are based on [Font Awesome][fontawesome].
+## Documentation
 
+- [Setup](doc/setup.md)
+- [Usage](doc/usage.md)
+- [Custom actions and scripts](doc/scripts.md)
+- [Workflow integration](doc/integration.md)
 
-[mage]: https://magefile.org
-[addon]: https://addons.mozilla.org/en-US/firefox/addon/alfred-launcher-integration/
-[licence]: https://github.com/deanishe/alfred-firefox/blob/master/LICENCE.txt
-[workflow]: https://github.com/deanishe/alfred-firefox/releases/latest
-[demo]: https://github.com/deanishe/alfred-firefox/blob/master/demo.gif
-[docs]: https://github.com/deanishe/alfred-firefox/blob/master/doc/index.md
-[scripts]: https://github.com/deanishe/alfred-firefox/blob/master/doc/scripts.md
-[integration]: https://github.com/deanishe/alfred-firefox/blob/master/doc/integration.md
-[usage]: https://github.com/deanishe/alfred-firefox/blob/master/doc/usage.md
-[setup]: https://github.com/deanishe/alfred-firefox/blob/master/doc/setup.md
-[go]: https://golang.org
-[awgo]: https://github.com/deanishe/awgo
-[fontawesome]: https://fontawesome.com/
+See the [documentation directory](doc/) for the full documentation.
 
+## Maintenance and acknowledgements
+
+This repository is maintained by [mtissington](https://github.com/mtissington). It is based on the original [deanishe/alfred-firefox project](https://github.com/deanishe/alfred-firefox), created by Dean Jackson. Thanks to Dean for the original work.
+
+The project is written in Go and uses the [AwGo library](https://github.com/deanishe/awgo). Icons are based on [Font Awesome](https://fontawesome.com/).
+
+This project is released under the [MIT License](LICENCE.txt).
