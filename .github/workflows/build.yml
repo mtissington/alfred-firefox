@@ -1,3 +1,4 @@
+
 name: Build
 
 on:
@@ -12,7 +13,6 @@ permissions:
 
 jobs:
   build:
-    # Apple Silicon (arm64) runner
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v5
@@ -21,16 +21,16 @@ jobs:
         with:
           go-version-file: go.mod
 
-      - name: Verify architecture
-        run: test "$(uname -m)" = "arm64"
-
       - name: Test
         run: go run github.com/magefile/mage test
 
-      - name: Build workflow and extension
+      - name: Build Alfred workflow
         run: go run github.com/magefile/mage dist
 
-      - name: Verify binary is universal
+      - name: Build Firefox extension
+        run: go run github.com/magefile/mage extension
+
+      - name: Verify universal binary
         run: |
           lipo -archs build/alfred-firefox
           lipo -archs build/alfred-firefox | grep -q arm64
@@ -38,8 +38,10 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: alfred-firefox-universal
-          path: dist/*.alfredworkflow
+          name: alfred-firefox-builds
+          path: |
+            dist/*.alfredworkflow
+            dist/*.xpi
           if-no-files-found: error
 
   release:
@@ -51,8 +53,11 @@ jobs:
     steps:
       - uses: actions/download-artifact@v5
         with:
-          name: alfred-firefox-universal
+          name: alfred-firefox-builds
           path: dist
+
       - uses: softprops/action-gh-release@v2
         with:
-          files: dist/*.alfredworkflow
+          files: |
+            dist/*.alfredworkflow
+            dist/*.xpi
